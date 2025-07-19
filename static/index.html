@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VK Mini App Example</title>
+    <script src="https://unpkg.com/vkma-connect/dist/vkma-connect.umd.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <button id="helloButton">Нажми меня</button>
+
+    <script>
+        const connect = new VKMAConnect();
+        
+        document.getElementById('helloButton').addEventListener('click', async () => {
+            try {
+                // Отправляем запрос на наш бэкенд
+                const response = await fetch('/api/hello');
+                const data = await response.json();
+                
+                // Показываем результат пользователю через VK Mini Apps API
+                connect.send("VKWebAppShowSnackbar", {
+                    text: `Сервер ответил: ${data.response}`,
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                connect.send("VKWebAppShowSnackbar", {
+                    text: 'Произошла ошибка',
+                });
+            }
+        });
+    </script>
+</body>
+</html>
