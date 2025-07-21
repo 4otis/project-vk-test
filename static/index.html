@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VK Mini App Example</title>
-    <script src="https://unpkg.com/vkma-connect/dist/vkma-connect.umd.js"></script>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,26 +30,22 @@
     </style>
 </head>
 <body>
-    <button id="helloButton">Нажми меня</button>
+    <div id="app">
+        <h1>Привет из моего Go-бэкенда!</h1>
+        <button id="loadData">Загрузить данные</button>
+        <div id="result"></div>
+    </div>
 
     <script>
-        const connect = new VKMAConnect();
-        
-        document.getElementById('helloButton').addEventListener('click', async () => {
+        document.getElementById('loadData').addEventListener('click', async () => {
             try {
-                // Отправляем запрос на наш бэкенд
-                const response = await fetch('/api/hello');
+                const response = await fetch('http://158.160.99.68:8080/api/hello', {
+                    method: 'GET',
+                });
                 const data = await response.json();
-                
-                // Показываем результат пользователю через VK Mini Apps API
-                connect.send("VKWebAppShowSnackbar", {
-                    text: `Сервер ответил: ${data.response}`,
-                });
+                document.getElementById('result').innerText = JSON.stringify(data);
             } catch (error) {
-                console.error('Error:', error);
-                connect.send("VKWebAppShowSnackbar", {
-                    text: 'Произошла ошибка',
-                });
+                console.error('Ошибка:', error);
             }
         });
     </script>
