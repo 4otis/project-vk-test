@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VK Mini App Example</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <script>
+  vkBridge.send("VKWebAppInit", {});
+</script>
     <style>
         body {
             font-family: Arial, sans-serif;
