@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VK Mini App Example</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-    <script>
-  vkBridge.send("VKWebAppInit", {});
-</script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,15 +37,41 @@
     </div>
 
     <script>
+        // Инициализация VK Bridge
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Используем .default для новых версий VK Bridge
+                const bridge = window.vkBridge.default || window.vkBridge;
+                
+                // Инициализируем приложение
+                await bridge.send("VKWebAppInit", {});
+                console.log("VK Bridge успешно инициализирован");
+                
+                // Получаем параметры запуска (опционально)
+                const launchParams = await bridge.send("VKWebAppGetLaunchParams");
+                console.log("Параметры запуска:", launchParams);
+                
+            } catch (error) {
+                console.warn("Приложение работает вне клиента VK или произошла ошибка:", error);
+            }
+        });
+
+        // Обработчик кнопки
         document.getElementById('loadData').addEventListener('click', async () => {
             try {
                 const response = await fetch('http://158.160.99.68:8080/api/hello', {
                     method: 'GET',
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
-                document.getElementById('result').innerText = JSON.stringify(data);
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
             } catch (error) {
-                console.error('Ошибка:', error);
+                console.error('Ошибка при загрузке данных:', error);
+                document.getElementById('result').innerText = `Ошибка: ${error.message}`;
             }
         });
     </script>
