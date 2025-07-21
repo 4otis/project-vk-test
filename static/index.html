@@ -1,79 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VK Mini App Example</title>
-    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+    <title>Моя Mini App</title>
+    <!-- Подключаем VK Bridge и инициализируем его -->
+    <script>
+        function initBridge() {
+            if (window.vkBridge) {
+                vkBridge.send('VKWebAppInit');
+            } else {
+                console.error("VK Bridge не загружен!");
+            }
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    </script>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js" onload="initBridge()"></script>
 </head>
 <body>
-    <div id="app">
-        <h1>Привет из моего Go-бэкенда!</h1>
-        <button id="loadData">Загрузить данные</button>
-        <div id="result"></div>
-    </div>
-
-    <script>
-        // Инициализация VK Bridge
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Используем .default для новых версий VK Bridge
-                const bridge = window.vkBridge.default || window.vkBridge;
-                
-                // Инициализируем приложение
-                await bridge.send("VKWebAppInit", {});
-                console.log("VK Bridge успешно инициализирован");
-                
-                // Получаем параметры запуска (опционально)
-                const launchParams = await bridge.send("VKWebAppGetLaunchParams");
-                console.log("Параметры запуска:", launchParams);
-                
-            } catch (error) {
-                console.warn("Приложение работает вне клиента VK или произошла ошибка:", error);
-            }
-        });
-
-        // Обработчик кнопки
-        document.getElementById('loadData').addEventListener('click', async () => {
-            try {
-                const response = await fetch('http://158.160.99.68:8080/api/hello', {
-                    method: 'GET',
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
-            } catch (error) {
-                console.error('Ошибка при загрузке данных:', error);
-                document.getElementById('result').innerText = `Ошибка: ${error.message}`;
-            }
-        });
-    </script>
+    <h1>Привет, это моя Mini App!</h1>
 </body>
 </html>
